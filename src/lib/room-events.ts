@@ -30,6 +30,14 @@ export interface ClientEventPayloadMap {
   "playlist:item:error": { itemId: string; error: string }
   "playlist:stream:select": { itemId: string; streamId: string }
   "playlist:text-track:select": { itemId: string; textTrackId: string | null }
+  "playlist:text-track:add": {
+    itemId: string
+    src: string
+    label: string
+    language?: string
+    kind?: "subtitles" | "captions"
+    type?: string
+  }
   "playlist:rename": { itemId: string; name: string }
   "playlist:reorder": { from: number; to: number }
   "playlist:select": { index: number }

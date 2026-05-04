@@ -72,6 +72,15 @@ export const playlistTextTrackSelectSchema = z.object({
   textTrackId: z.string().min(1).nullable(),
 })
 
+export const playlistTextTrackAddSchema = z.object({
+  itemId: z.string().min(1),
+  src: z.url(),
+  label: z.string().min(1).max(128),
+  language: z.string().min(1).max(16).optional(),
+  kind: z.enum(["subtitles", "captions"]).optional(),
+  type: z.string().min(1).max(64).optional(),
+})
+
 export const participantUpdateSchema = z.object({
   username: z.string().min(1).max(64).optional(),
   avatarStyle: z.string().min(1).max(64).optional(),

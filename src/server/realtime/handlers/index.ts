@@ -22,6 +22,7 @@ export const roomMessageHandlers: Record<string, RoomMessageHandler> = {
   "playlist:item:error": playlist.handlePlaylistItemError,
   "playlist:stream:select": playlist.handlePlaylistStreamSelect,
   "playlist:text-track:select": playlist.handlePlaylistTextTrackSelect,
+  "playlist:text-track:add": playlist.handlePlaylistTextTrackAdd,
   "playlist:import": playlist.handlePlaylistImport,
   "seek:preview": seekPreview.handleSeekPreview,
   "participant:update": participant.handleParticipantUpdate,
