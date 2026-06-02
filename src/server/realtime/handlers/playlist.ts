@@ -12,6 +12,7 @@ import {
   playlistRetrySchema,
   playlistStreamSelectSchema,
   playlistTextTrackSelectSchema,
+  playlistTextTrackAddSchema,
 } from "@/zod/schemas"
 import type { RoomState } from "@/zod/types"
 import { randomUUID } from "node:crypto"
@@ -375,7 +376,40 @@ export const handlePlaylistTextTrackSelect: RoomMessageHandler = async (
   })
 }
 
-export const handlePlaylistReorder: RoomMessageHandler = async (ctx, data) => {
+export const handlePlaylistTextTrackAdd: RoomMessageHandler = async (
+  ctx,
+  data,
+) => {
+  const parsed = playlistTextTrackAddSchema.safeParse(data.payload)
+  if (!parsed.success) return
+
+  await mutateRoomMessage(ctx.store, ctx.roomId, ctx.userId, (state) => {
+    if (
+      !canControlFromConnectionContext(state, ctx.userId, {
+        controlAuthorized: ctx.controlAuthorized,
+        isControlSession: ctx.isControlSession,
+      })
+    ) {
+      return false
+    }
+    const item = state.playlist.find((entry) => entry.id === parsed.data.itemId)
+    if (!item) return false
+    const trackId = randomUUID()
+    const newTrack = {
+      id: trackId,
+      src: parsed.data.src,
+      label: parsed.data.label,
+      language: parsed.data.language,
+      kind: parsed.data.kind ?? "subtitles",
+      type: parsed.data.type,
+      isDefault: false,
+    }
+    item.textTracks = [...(item.textTracks ?? []), newTrack]
+    state.updatedAt = Date.now()
+    return true
+  })
+}
+
   const reorderResult = playlistReorderSchema.safeParse(data.payload)
   if (!reorderResult.success) return
 

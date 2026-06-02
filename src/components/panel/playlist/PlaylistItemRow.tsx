@@ -7,6 +7,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item"
+import type { TypedRoomEventSender } from "@/lib/room-events"
 import { cn } from "@/lib/utils"
 import type { PlaylistItem } from "@/zod/types"
 import { useSortable } from "@dnd-kit/react/sortable"
@@ -18,6 +19,7 @@ import {
   PlayCircle,
   RefreshCw,
 } from "lucide-react"
+import { SubtitleTracksDialog } from "./SubtitleTracksDialog"
 
 export function PlaylistItemRow(props: {
   item: PlaylistItem
@@ -27,6 +29,9 @@ export function PlaylistItemRow(props: {
   canControlPlaylist: boolean
   playlistLength: number
   draftValue: string
+  roomId: string
+  userId: string
+  send: TypedRoomEventSender
   onDraftChange: (next: string) => void
   onDraftStart: () => void
   onDraftCommit: () => void
@@ -43,6 +48,9 @@ export function PlaylistItemRow(props: {
     canControlPlaylist,
     playlistLength,
     draftValue,
+    roomId,
+    userId,
+    send,
     onDraftChange,
     onDraftStart,
     onDraftCommit,
@@ -130,6 +138,13 @@ export function PlaylistItemRow(props: {
           ) : null}
         </ItemContent>
         <ItemActions>
+          <SubtitleTracksDialog
+            item={item}
+            roomId={roomId}
+            userId={userId}
+            send={send}
+            canControl={canControlPlaylist}
+          />
           <Button
             variant="secondary"
             size="icon-sm"
@@ -163,3 +178,4 @@ export function PlaylistItemRow(props: {
     </div>
   )
 }
+
